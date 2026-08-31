@@ -6,7 +6,7 @@ A highly capable, Python-based, voice-activated virtual assistant named **"Bro"*
 
 ## 🌟 Features
 
-- **Voice Activation:** Constantly listens in the background. Wakes up when it hears the keyword ("hello" / "Bro").
+- **Voice Activation:** Constantly listens in the background. Wakes up when it hears the keyword ("hey bro").
 - **Ultra-Fast Intelligence:** Powered by **Groq** (LLaMA 3 70B Tool Use Preview) for near-instant conversational responses and advanced function calling.
 - **High-Fidelity STT:** Uses **Groq's Whisper** (whisper-large-v3) for highly accurate speech-to-text transcription.
 - **Natural Voice (TTS):** Uses Microsoft's **edge-tts** for asynchronous, high-quality, and natural-sounding voice responses.
@@ -26,7 +26,7 @@ The architecture transitioned from a traditional `if-elif` hardcoded command str
 ```mermaid
 graph TD
     A[Microphone] -->|Constant Listening| B[Wake Word Engine]
-    B -->|'hello' detected| C[Audio Engine: Listen]
+    B -->|'hey bro' detected| C[Audio Engine: Listen]
     C -->|Record User Voice| D[Groq Whisper STT]
     D -->|Transcribed Text| E[Groq LLM - LLaMA 3]
     E -->|Intent & Tool Routing| F{Tool Calling}
@@ -96,7 +96,7 @@ NEWS_API_KEY=your_news_api_key_here
    python main.py
    ```
 4. The system will print `Adjusting for ambient noise... Please wait.` Let it calibrate in silence for 2 seconds.
-5. When it says `Listening for wake word 'hello'...`, say **"hello"** to activate it.
+5. When it says `Listening for wake word 'hey bro'...`, say **"hey bro"** to activate it.
 6. The assistant will respond, **"Yeah Bro?"**
 7. Give it a command! (e.g., *"Open calculator and search the web for Python frameworks"*).
 

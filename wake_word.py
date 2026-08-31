@@ -13,7 +13,7 @@ def listen_for_wake_word(callback):
         print("Adjusting for ambient noise... Please wait.")
         r.adjust_for_ambient_noise(source, duration=2)
         
-    print("Listening for wake word 'hello'...")
+    print("Listening for wake word 'hey bro'...")
     
     while True:
         with sr.Microphone() as source:
@@ -25,7 +25,7 @@ def listen_for_wake_word(callback):
                 # It is highly accurate, though requires an internet connection.
                 text = r.recognize_google(audio).lower()
                 
-                if "hello" in text:
+                if "hey bro" in text:
                     print("Wake word detected!")
                     callback()
                     print("Listening for wake word again...")
