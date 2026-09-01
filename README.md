@@ -7,6 +7,7 @@ A highly capable, Python-based, voice-activated virtual assistant named **"Bro"*
 ## 🌟 Features
 
 - **Voice Activation:** Constantly listens in the background. Wakes up when it hears the keyword ("hey bro").
+- **Hybrid Input Mode:** Type commands directly into the terminal or use voice concurrently—no need to choose one or the other.
 - **Ultra-Fast Intelligence:** Powered by **Groq** (`openai/gpt-oss-120b`) for near-instant conversational responses and advanced function calling.
 - **High-Fidelity STT:** Uses **Groq's Whisper** (whisper-large-v3) for highly accurate speech-to-text transcription.
 - **Natural Voice (TTS):** Uses Microsoft's **edge-tts** for asynchronous, high-quality, and natural-sounding voice responses.
@@ -14,8 +15,9 @@ A highly capable, Python-based, voice-activated virtual assistant named **"Bro"*
   - Change system volume dynamically.
   - Open and close local PC applications.
   - Execute web searches and open popular websites.
+- **Native YouTube Scraper:** Programmatically searches and plays requested videos/music natively on YouTube, bypassing hardcoded libraries.
 - **News Integration:** Fetches top news headlines dynamically using the NewsAPI.
-- **Music Playback:** Looks up and plays specific songs mapped in a local library.
+- **Stealth Terminal Output:** Clean, production-ready console logging that hides internal workflows and API calls.
 
 ---
 
@@ -96,9 +98,11 @@ NEWS_API_KEY=your_news_api_key_here
    python main.py
    ```
 4. The system will print `Adjusting for ambient noise... Please wait.` Let it calibrate in silence for 2 seconds.
-5. When it says `Listening for wake word 'hey bro'...`, say **"hey bro"** to activate it.
-6. The assistant will respond, **"Yeah Bro?"**
-7. Give it a command! (e.g., *"Open calculator and search the web for Python frameworks"*).
+5. The terminal will display `--- TEXT MODE ENABLED ---`.
+6. From here, you have two options:
+   - **Voice:** Say **"hey bro"** to activate it. It will reply **"Yeah Bro?"** and you can speak your command.
+   - **Text:** Simply type your command into the terminal and press Enter.
+7. Give it a command! (e.g., *"Play Honey Singh on YouTube"* or *"Open calculator"*).
 
 ---
 
