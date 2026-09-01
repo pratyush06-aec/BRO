@@ -1,13 +1,13 @@
 # 🤖 Bro - Voice Assistant (Jarvis-inspired)
 
-A highly capable, Python-based, voice-activated virtual assistant named **"Bro"**. This project combines local command execution, intelligent system control, and the power of the **Groq API** (LLaMA 3) to provide lightning-fast, intelligent responses and advanced tool calling.
+A highly capable, Python-based, voice-activated virtual assistant named **"Bro"**. This project combines local command execution, intelligent system control, and the power of the **Groq API** to provide lightning-fast, intelligent responses and advanced tool calling.
 
 ---
 
 ## 🌟 Features
 
 - **Voice Activation:** Constantly listens in the background. Wakes up when it hears the keyword ("hey bro").
-- **Ultra-Fast Intelligence:** Powered by **Groq** (LLaMA 3 70B Tool Use Preview) for near-instant conversational responses and advanced function calling.
+- **Ultra-Fast Intelligence:** Powered by **Groq** (`openai/gpt-oss-120b`) for near-instant conversational responses and advanced function calling.
 - **High-Fidelity STT:** Uses **Groq's Whisper** (whisper-large-v3) for highly accurate speech-to-text transcription.
 - **Natural Voice (TTS):** Uses Microsoft's **edge-tts** for asynchronous, high-quality, and natural-sounding voice responses.
 - **System Automation & Control:** 
@@ -28,7 +28,7 @@ graph TD
     A[Microphone] -->|Constant Listening| B[Wake Word Engine]
     B -->|'hey bro' detected| C[Audio Engine: Listen]
     C -->|Record User Voice| D[Groq Whisper STT]
-    D -->|Transcribed Text| E[Groq LLM - LLaMA 3]
+    D -->|Transcribed Text| E[Groq LLM - GPT OSS]
     E -->|Intent & Tool Routing| F{Tool Calling}
     F -->|System Commands| G[Volume / Apps / Web]
     F -->|API Commands| H[News API]

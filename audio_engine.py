@@ -16,6 +16,9 @@ async def async_speak(text, voice="en-US-ChristopherNeural"):
     """
     Asynchronously converts text to speech using edge-tts and plays it.
     """
+    if not text or not str(text).strip():
+        return
+        
     output_file = "temp_response.mp3"
     communicate = edge_tts.Communicate(text, voice)
     await communicate.save(output_file)

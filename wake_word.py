@@ -16,27 +16,43 @@ def listen_for_wake_word(callback):
     print("Listening for wake word 'hey bro'...")
     
     while True:
+        wake_word_detected = False
+        captured_command = ""
+        
         with sr.Microphone() as source:
-            try:
-                # Listen for a short phrase
-                audio = r.listen(source, timeout=1, phrase_time_limit=3)
-                
-                # Using Google's free speech recognition (no API key required)
-                # It is highly accurate, though requires an internet connection.
-                text = r.recognize_google(audio).lower()
-                
-                if "hey bro" in text:
-                    print("Wake word detected!")
-                    callback()
-                    print("Listening for wake word again...")
+            # Stay inside this context manager so the mic doesn't constantly open and close
+            while not wake_word_detected:
+                try:
+                    # Listen for a short phrase
+                    audio = r.listen(source, timeout=5, phrase_time_limit=5)
                     
-            except sr.WaitTimeoutError:
-                # No speech detected within the timeout, just loop again
-                pass
-            except sr.UnknownValueError:
-                # Speech was detected but not understood
-                pass
-            except sr.RequestError as e:
-                print(f"Could not request results; {e}")
-            except Exception as e:
-                print(f"Error in wake word detection: {e}")
+                    # Using Google's free speech recognition (no API key required)
+                    # It is highly accurate, though requires an internet connection.
+                    text = r.recognize_google(audio).lower()
+                    print(f"[Debug] I heard: '{text}'")
+                    
+                    # Check for "bro" instead of "hey bro" just to be more forgiving during testing
+                    if "bro" in text or "hey" in text:
+                        wake_word_detected = True
+                        # Extract any commands spoken after the wake word
+                        # e.g., "hey bro open youtube" -> "open youtube"
+                        captured_command = text.replace("hey bro", "").replace("hey", "").replace("bro", "").strip()
+                        break # Break the inner loop to drop the microphone handle
+                        
+                except sr.WaitTimeoutError:
+                    # No speech detected within the timeout, just loop again without closing the mic
+                    pass
+                except sr.UnknownValueError:
+                    # Speech was detected but not understood
+                    print("[Debug] I heard some audio, but couldn't understand the words.")
+                    pass
+                except sr.RequestError as e:
+                    print(f"Could not request results; {e}")
+                except Exception as e:
+                    print(f"Error in wake word detection: {e}")
+                
+        # Now outside the with block, the microphone handle is released for the main engine!
+        if wake_word_detected:
+            print("Wake word detected!")
+            callback(captured_command)
+            print("Listening for wake word again...")

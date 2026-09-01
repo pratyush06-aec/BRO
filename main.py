@@ -20,7 +20,7 @@ else:
 
 # Conversation Memory
 messages = [
-    {"role": "system", "content": "You are a highly capable AI assistant named Bro. You control the user's PC, can search the web, play music, open apps, and get news. Keep your spoken responses concise and natural."}
+    {"role": "system", "content": "You are a highly capable AI assistant named Bro. You control the user's PC, can search the web, play music, open apps, and get news. Keep your spoken responses concise and natural. NEVER hallucinate or make up website URLs. If the user asks to play a song or video on YouTube, ALWAYS use the `play_on_youtube` tool, do NOT use `open_website`."}
 ]
 
 def process_command_with_llm(user_input):
@@ -36,7 +36,7 @@ def process_command_with_llm(user_input):
     try:
         # Step 1: Send the conversation and available functions to the model
         response = client.chat.completions.create(
-            model="llama3-groq-70b-8192-tool-use-preview",
+            model="openai/gpt-oss-120b",
             messages=messages,
             tools=GROQ_TOOLS_SCHEMA,
             tool_choice="auto",
@@ -74,7 +74,7 @@ def process_command_with_llm(user_input):
 
             # Step 4: Send the info back to the model for a final response
             second_response = client.chat.completions.create(
-                model="llama3-groq-70b-8192-tool-use-preview",
+                model="openai/gpt-oss-120b",
                 messages=messages
             )
             final_text = second_response.choices[0].message.content
@@ -91,10 +91,14 @@ def process_command_with_llm(user_input):
         print(f"Error communicating with LLM: {e}")
         return "Sorry Bro, I ran into an error processing that."
 
-def on_wake_word_detected():
+def on_wake_word_detected(captured_command=""):
     """Callback function triggered when the wake word is heard."""
-    speak("Yeah Bro?")
-    command_text = listen_and_transcribe()
+    if captured_command:
+        print(f"Captured command from wake word: {captured_command}")
+        command_text = captured_command
+    else:
+        speak("Yeah Bro?")
+        command_text = listen_and_transcribe()
     
     if command_text:
         # Process the command
@@ -105,11 +109,34 @@ def on_wake_word_detected():
         # If nothing was transcribed or timed out
         pass
 
+import threading
+import sys
+
 if __name__ == "__main__":
     if not client:
         print("WARNING: Groq API Key is missing. The assistant will not function properly.")
     
     speak("Initializing Bro. System online and ready.")
     
-    # Start the wake word listener. This is a blocking loop.
+    def keyboard_input_loop():
+        print("\n--- TEXT MODE ENABLED ---")
+        print("You can now type commands directly here, or speak 'hey bro' out loud.\n")
+        while True:
+            try:
+                # We use a simple input prompt
+                user_text = input()
+                if user_text.strip():
+                    print(f"\n[Typed Command]: {user_text}")
+                    # Process it just like a voice command
+                    ai_response = process_command_with_llm(user_text)
+                    print(f"Bro: {ai_response}\n")
+                    speak(ai_response)
+            except (KeyboardInterrupt, EOFError):
+                os._exit(0)
+                
+    # Run the keyboard listener in a background thread
+    keyboard_thread = threading.Thread(target=keyboard_input_loop, daemon=True)
+    keyboard_thread.start()
+    
+    # Start the wake word listener in the main thread. This is a blocking loop.
     listen_for_wake_word(on_wake_word_detected)

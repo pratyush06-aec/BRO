@@ -1,6 +1,6 @@
 import requests
 import os
-from system_controls import search_web, open_website, open_app, system_volume
+from system_controls import search_web, open_website, open_app, system_volume, play_on_youtube
 import musicLibrary
 import webbrowser
 
@@ -37,7 +37,8 @@ AVAILABLE_TOOLS = {
     "search_web": search_web,
     "open_website": open_website,
     "open_app": open_app,
-    "system_volume": system_volume
+    "system_volume": system_volume,
+    "play_on_youtube": play_on_youtube
 }
 
 # Define the JSON schemas for the tools to pass to Groq API
@@ -56,6 +57,23 @@ GROQ_TOOLS_SCHEMA = [
                     }
                 },
                 "required": ["song_name"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "play_on_youtube",
+            "description": "Searches YouTube and plays the first video result. Use this when the user asks to play a song or video on YouTube.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The search query for the YouTube video."
+                    }
+                },
+                "required": ["query"]
             }
         }
     },

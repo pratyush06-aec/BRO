@@ -4,6 +4,9 @@ import subprocess
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import urllib.request
+import urllib.parse
+import re
 
 def search_web(query):
     """Searches the web in a new browser tab."""
@@ -17,6 +20,22 @@ def open_website(url):
         url = "https://" + url
     webbrowser.open(url)
     return f"Opening website: {url}"
+
+def play_on_youtube(query):
+    """Searches YouTube and plays the first video result."""
+    try:
+        query_string = urllib.parse.urlencode({"search_query": query})
+        html_content = urllib.request.urlopen("https://www.youtube.com/results?" + query_string)
+        search_results = re.findall(r"watch\?v=(\S{11})", html_content.read().decode())
+        
+        if search_results:
+            video_url = "https://www.youtube.com/watch?v=" + search_results[0]
+            webbrowser.open(video_url)
+            return f"Playing {query} on YouTube."
+        else:
+            return f"No YouTube results found for {query}."
+    except Exception as e:
+        return f"Failed to play on YouTube. Error: {e}"
 
 def open_app(app_name):
     """Tries to open a local application."""
